@@ -47,14 +47,21 @@ def log():
         object_type = get_type(git_object)
         if object_type != 'blob' and object_type != 'tree':
             object_content = get_content(git_object)
-            author_index = indices = [i for i, s in enumerate(object_content) if 'author' in s]
+            author_index = [i for i, s in enumerate(object_content) if 'author' in s]
             print '-----------------------'
             print '{} {}'.format(object_type, git_object)
-            print 'Author: {}'.format(object_content[author_index[0]][:-1])
+            print object_content[author_index[0]][:-1]
             print 'Message: {}'.format(object_content[-1])
 
 
 ap = argparse.ArgumentParser()
+
 ap.add_argument("-f", "--function", required=True, help="function name")
+ap.add_argument("-ha", "--hash", required=False, help="hash value")
 arg = vars(ap.parse_args())
-locals()[arg['function']]()
+
+if arg['hash']:
+    locals()[arg['function']](arg['hash'])
+else:
+    locals()[arg['function']]()
+
