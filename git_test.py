@@ -1,5 +1,6 @@
 import subprocess
 import os
+import argparse
 
 
 def write_git_object(content):
@@ -42,13 +43,18 @@ def get_full_desc():
 
 def log():
     git_objects = get_git_objects()
-    for object in git_objects:
-        object_type = get_type(object)
+    for git_object in git_objects:
+        object_type = get_type(git_object)
         if object_type != 'blob' and object_type != 'tree':
-            object_content = get_content(object)
+            object_content = get_content(git_object)
+            author_index = indices = [i for i, s in enumerate(object_content) if 'author' in s]
             print '-----------------------'
-            print '{} {}'.format(object_type, object)
-            print object_content[1][:-1]
-            print '-----------------------'
+            print '{} {}'.format(object_type, git_object)
+            print 'Author: {}'.format(object_content[author_index[0]][:-1])
+            print 'Message: {}'.format(object_content[-1])
 
-log()
+
+ap = argparse.ArgumentParser()
+ap.add_argument("-f", "--function", required=True, help="function name")
+arg = vars(ap.parse_args())
+locals()[arg['function']]()
