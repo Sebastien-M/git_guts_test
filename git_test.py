@@ -14,8 +14,7 @@ def get_git_objects():
     out = proc.stdout.readlines()
     objects = []
     for line in out:
-        git_hash = line[-42:-1]
-        git_hash = git_hash.replace('/', '')
+        git_hash = line[-42:-1].replace('/', '')
         objects.append(git_hash)
     return objects
 
