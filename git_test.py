@@ -18,23 +18,37 @@ def get_git_objects():
     return objects
 
 
-def get_desc(hash):
+def get_content(hash):
     proc = subprocess.Popen('git cat-file -p {}'.format(hash), stdout=subprocess.PIPE, shell=True)
     out = proc.stdout.readlines()
-    print('Content: {}'.format(out))
+    return out
 
 
 def get_type(hash):
     proc = subprocess.Popen('git cat-file -t {}'.format(hash), stdout=subprocess.PIPE, shell=True)
     out = proc.stdout.readlines()
-    print('Type: {}'.format(out[0][:-1]))
+    return out[0][:-1]
 
 
-# write_git_object('test3')
-git_objects = get_git_objects()
-print '--------git objects--------'
-for object in git_objects:
-    print object
-    get_type(object)
-    get_desc(object)
-    print('-------')
+def get_full_desc():
+    git_objects = get_git_objects()
+    print '--------git objects--------'
+    for object in git_objects:
+        print object
+        print 'Type: {}'.format(get_type(object))
+        print 'Content: {}'.format(get_content(object))
+        print('-------')
+
+
+def log():
+    git_objects = get_git_objects()
+    for object in git_objects:
+        object_type = get_type(object)
+        if object_type != 'blob' and object_type != 'tree':
+            object_content = get_content(object)
+            print '-----------------------'
+            print '{} {}'.format(object_type, object)
+            print object_content[1][:-1]
+            print '-----------------------'
+
+log()
