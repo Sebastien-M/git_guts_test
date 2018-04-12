@@ -1,6 +1,7 @@
 import subprocess
 import os
 import argparse
+import datetime
 
 
 def write_git_object(content):
@@ -50,7 +51,9 @@ def log():
             author_index = [i for i, s in enumerate(object_content) if 'author' in s]
             print '-----------------------'
             print '{} {}'.format(object_type, git_object)
-            print object_content[author_index[0]][:-1]
+            print object_content[author_index[0]][:-17]
+            print 'Date: {}'.format(datetime.datetime.fromtimestamp(
+                int(object_content[author_index[0]][-17:-7])).strftime('%Y-%m-%d %H:%M:%S'))
             print 'Message: {}'.format(object_content[-1])
 
 
@@ -64,4 +67,3 @@ if arg['hash']:
     locals()[arg['function']](arg['hash'])
 else:
     locals()[arg['function']]()
-
